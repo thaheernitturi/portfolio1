@@ -6,10 +6,15 @@ import streamlit_lottie as st_lottie
 
 # Load Lottie Animation
 def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
+    try:
+        r = requests.get(url)
+        if r.status_code != 200:
+            st.warning(f"Failed to load Lottie animation from {url}")
+            return None
+        return r.json()
+    except Exception as e:
+        st.error(f"Error loading Lottie from {url}: {e}")
         return None
-    return r.json()
 
 # Load Lottie animations
 lottie_ai = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_1pxqjqps.json")
@@ -36,7 +41,10 @@ with left_col:
         - 📍 Currently working on NeuraMentor – an AI-powered ML tutor
     """)
 with right_col:
-    st_lottie(lottie_ai, height=250, key="ai")
+    if lottie_ai:
+        st_lottie.st_lottie(lottie_ai, height=250, key="ai")
+    else:
+        st.info("AI animation not available.")
 
 st.write("---")
 
@@ -64,7 +72,10 @@ Tracks moving objects in real time using Kalman Filter and OpenCV.
 - 📍 Real-time position tracking
 """)
 
-st_lottie(lottie_projects, height=200, key="projects")
+if lottie_projects:
+    st_lottie.st_lottie(lottie_projects, height=200, key="projects")
+else:
+    st.info("Project animation not available.")
 
 st.write("---")
 
@@ -100,7 +111,10 @@ st.write("---")
 
 # --- CONTACT ---
 st.header("Contact Me")
-st_lottie(lottie_contact, height=150, key="contact")
+if lottie_contact:
+    st_lottie.st_lottie(lottie_contact, height=150, key="contact")
+else:
+    st.info("Contact animation not available.")
 st.write("Feel free to reach out!")
 contact_form = """
 <form action="https://formsubmit.co/thaheer@example.com" method="POST">
